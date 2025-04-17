@@ -1,13 +1,14 @@
-﻿using BankBlazor.API.Models;
+﻿using BankBlazor.API.DTOs;
+using BankBlazor.API.Models;
 
 namespace BankBlazor.API.Servicez.Interfaces
 {
     public interface ICustomerService
     {
-        Task<List<Customer>> GetAllCustomersAsync();
-        Task<Customer> GetCustomerByIdAsync(int id);
-        Task AddCustomerAsync(Customer customer);
-        Task UpdateCustomerAsync(Customer customer);
-        Task DeleteCustomerAsync(int id);
+        Task<List<CustomerReadDTO>> GetAllCustomersAsync();
+        Task<CustomerReadDTO> GetCustomerByIdAsync(int id);
+        //Task AddCustomerAsync(Customer customer);
+        //Task UpdateCustomerAsync();
+        //Task DeleteCustomerAsync(int id);
     }
 }
