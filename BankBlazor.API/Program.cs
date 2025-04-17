@@ -20,6 +20,7 @@ namespace BankBlazor.API
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
 
 
             var app = builder.Build();
