@@ -14,7 +14,7 @@ namespace BankBlazor.API.Servicez
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<AccountReadDTO>> GetAccountsByCustomerIdAsync(int customerId)
+        public async Task<List<AccountReadDTO>> GetAccountsByCustomerIdAsync(int customerId)
         {
             var accounts = await _dbContext.Dispositions
                 .Where(d => d.CustomerId == customerId)
