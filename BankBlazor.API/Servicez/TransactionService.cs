@@ -1,5 +1,6 @@
 ﻿using BankBlazor.API.Contexts;
 using BankBlazor.API.DTOs;
+using BankBlazor.API.Models;
 using BankBlazor.API.Servicez.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,6 +50,32 @@ namespace BankBlazor.API.Servicez
                     Account = t.Account
                 })
                 .FirstOrDefaultAsync();
+
+            return transaction;
+        }
+        public async Task<Transaction> CreateTransaction(TransactionCreateDTO transactionDto)
+        {
+            var account = await _dbContext.Accounts.FindAsync(transactionDto.AccountId);
+            if (account == null)
+                throw new Exception("Account not found");
+
+            var transaction = new Transaction
+            {
+                AccountId = transactionDto.AccountId,
+                Date = transactionDto.Date,
+                Type = transactionDto.Type,
+                Operation = transactionDto.Operation,
+                Amount = transactionDto.Amount,
+                Balance = account.Balance + transactionDto.Amount,
+                Symbol = transactionDto.Symbol,
+                Bank = transactionDto.Bank,
+                Account = transactionDto.Account
+            };
+
+            account.Balance = transaction.Balance;
+
+            _dbContext.Transactions.Add(transaction);
+            await _dbContext.SaveChangesAsync();
 
             return transaction;
         }
