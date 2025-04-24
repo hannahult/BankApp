@@ -38,7 +38,7 @@ namespace BankBlazor.API.Controllerz
             try
             {
                 var newTransaction = await _transactionService.CreateTransaction(transactionDto);
-                return CreatedAtAction(nameof(GetTransactionById), new { id = newTransaction.TransactionId }, newTransaction);
+                return CreatedAtAction(nameof(GetTransactionById), new { transactionId = newTransaction.TransactionId }, newTransaction);
             }
             catch (Exception ex)
             {
