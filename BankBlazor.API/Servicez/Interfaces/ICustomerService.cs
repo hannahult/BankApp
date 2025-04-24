@@ -10,5 +10,6 @@ namespace BankBlazor.API.Servicez.Interfaces
         //Task AddCustomerAsync(Customer customer);
         //Task UpdateCustomerAsync();
         //Task DeleteCustomerAsync(int id);
+        Task<CustomerWithAccountsDTO?> GetCustomerWithAccountsAsync(int customerId);
     }
 }
