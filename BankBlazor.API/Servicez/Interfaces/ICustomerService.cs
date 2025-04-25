@@ -6,8 +6,9 @@ namespace BankBlazor.API.Servicez.Interfaces
     public interface ICustomerService
     {
         Task<List<CustomerReadDTO>> GetAllCustomersAsync();
-        Task<CustomerReadDTO> GetCustomerByIdAsync(int id);
-        //Task AddCustomerAsync(Customer customer);
+        Task<CustomerReadDTO> GetCustomerByIdAsync(int customerId);
+        Task<Customer> CreateCustomerAsync(CustomerCreateDTO dto);
+
         //Task UpdateCustomerAsync();
         //Task DeleteCustomerAsync(int id);
         Task<CustomerWithAccountsDTO?> GetCustomerWithAccountsAsync(int customerId);

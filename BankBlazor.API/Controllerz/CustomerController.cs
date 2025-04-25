@@ -1,4 +1,5 @@
 ﻿using BankBlazor.API.DTOs;
+using BankBlazor.API.Models;
 using BankBlazor.API.Servicez;
 using BankBlazor.API.Servicez.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +38,20 @@ namespace BankBlazor.API.Controllerz
             var customer = await _customerService.GetCustomerWithAccountsAsync(customerId);
             if (customer == null) return NotFound();
             return Ok(customer);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Customer>> CreateCustomer(CustomerCreateDTO dto)
+        {
+            try
+            {
+                var newCustomer = await _customerService.CreateCustomerAsync(dto);
+                return CreatedAtAction(nameof(GetCustomerById), new { customerId = newCustomer.CustomerId }, newCustomer);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

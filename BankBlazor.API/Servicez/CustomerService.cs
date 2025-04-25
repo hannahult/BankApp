@@ -1,5 +1,6 @@
 ﻿using BankBlazor.API.Contexts;
 using BankBlazor.API.DTOs;
+using BankBlazor.API.Models;
 using BankBlazor.API.Servicez.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -76,6 +77,29 @@ namespace BankBlazor.API.Servicez
             };
 
             return dto;
+        }
+        public async Task<Customer> CreateCustomerAsync(CustomerCreateDTO dto)
+        {
+            var newCustomer = new Customer
+            {
+                Gender = dto.Gender,
+                Givenname = dto.Givenname,
+                Surname = dto.Surname,
+                Streetaddress = dto.Streetaddress,
+                City = dto.City,
+                Zipcode = dto.Zipcode,
+                Country = dto.Country,
+                CountryCode = dto.CountryCode,
+                Birthday = dto.Birthday,
+                NationalId = dto.NationalId,
+                Telephonecountrycode = dto.Telephonecountrycode,
+                Telephonenumber = dto.Telephonenumber,
+                Emailaddress = dto.Emailaddress
+            };
+
+            _dbContext.Customers.Add(newCustomer);
+            await _dbContext.SaveChangesAsync();
+            return newCustomer;
         }
 
     }
