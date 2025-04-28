@@ -1,21 +1,18 @@
 ﻿@page "/"
 
-<!-- Hero banner image -->
 <div class="hero-banner">
     <img src="/images/hero.jpg" alt="Bank Banner" />
 </div>
 
-<!-- Welcome content -->
-<section class="container text-center my-5">
+<div class="text-center mt-5">
     <h1 class="display-4 fw-bold">Welcome to Bank Blazor</h1>
-    <p class="lead">The next </p>
+    <p class="lead">Please select your role:</p>
 
     <div class="mt-4">
-        <NavLink class="btn btn-primary m-2" href="/customers">Customers</NavLink>
-        <NavLink class="btn btn-secondary m-2" href="/accounts">Accounts</NavLink>
-        <NavLink class="btn btn-success m-2" href="/transactions">Transactions</NavLink>
+        <NavLink class="btn btn-primary btn-lg m-3" href="/customer-portal">Customer</NavLink>
+        <NavLink class="btn btn-secondary btn-lg m-3" href="/employee-portal">Employee</NavLink>
     </div>
-</section>
+</div>
 
 <style>
     .hero-banner {
