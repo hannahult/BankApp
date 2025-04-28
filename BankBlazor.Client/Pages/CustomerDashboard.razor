@@ -1,0 +1,19 @@
+﻿@page "/customer-dashboard"
+@inject HttpClient HttpClient
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+                <h4>My Profile</h4>
+                <p><strong>Name:</strong> @CustomerDetailsViewModel.Givenname @CustomerDetailsViewModel.Surname</p>
+                <p><strong>Email:</strong> @CustomerDetailsViewModel.Emailaddress</p>
+                <p><strong>City:</strong> @CustomerDetailsViewModel.City</p>
+                <p><strong>Country:</strong> @CustomerDetailsViewModel.Country</p>
+            </div>
+        </div>
+
+
+@code {
+
+}
