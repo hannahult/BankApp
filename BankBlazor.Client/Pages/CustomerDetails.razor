@@ -1,0 +1,146 @@
+﻿@page "/customer/details"
+@using BankBlazor.Client.ViewModels
+@inject HttpClient HttpClient
+
+@if (CustomerDetailsViewModel == null)
+{
+    <p class="text-center">Please enter a customer ID and fetch details.</p>
+}
+else
+{
+    <div class="text-center mb-5">
+        <h3>@CustomerDetailsViewModel.Givenname @CustomerDetailsViewModel.Surname</h3>
+    </div>
+
+    <h4 class="text-center">Accounts</h4>
+
+    <div class="customer-grid">
+        @foreach (var account in CustomerDetailsViewModel.Accounts)
+        {
+            <div class="customer-card">
+                <h3>Account ID: @account.AccountId</h3>
+                <p><strong>Balance:</strong> @account.Balance.ToString("C")</p>
+                <p><strong>Frequency:</strong> @account.Frequency</p>
+                <p><strong>Created:</strong> @account.Created.ToShortDateString()</p>
+            </div>
+        }
+    </div>
+}
+<div class="customer-id-form">
+    <h2>Find Customer</h2>
+    <div class="input-group">
+        <input type="number" @bind="customerId" placeholder="Enter Customer ID" />
+        <button @onclick="GetCustomerDetails">Search</button>
+    </div>
+</div>
+<style>
+    .customer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .customer-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        transition: transform 0.2s ease;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+        .customer-card:hover {
+            transform: translateY(-4px);
+        }
+
+    h3 {
+        margin-top: 0;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    p {
+        margin: 0.3rem 0;
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    .customer-id-form {
+        max-width: 400px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', sans-serif;
+        text-align: center;
+    }
+
+        .customer-id-form h2 {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+    .input-group {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+        .input-group input {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            flex: 1;
+        }
+
+        .input-group button {
+            background-color: #007bff;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+            .input-group button:hover {
+                background-color: #0056b3;
+            }
+
+    .customer-id-form p {
+        margin-top: 1rem;
+        color: #555;
+    }
+</style>
+
+@code {
+    public CustomerDetailsViewModel? CustomerDetailsViewModel { get; set; }
+    public int customerId;
+
+    private async Task GetCustomerDetails()
+    {
+        if (customerId > 0)
+        {
+            
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, $"https://localhost:7127/api/customer/{customerId}/accounts");
+                using (var response = await HttpClient.SendAsync(request))
+                {
+                    response.EnsureSuccessStatusCode();
+                    var body = await response.Content.ReadAsStringAsync();
+                    CustomerDetailsViewModel = JsonConvert.DeserializeObject<CustomerDetailsViewModel>(body);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+        }
+    }
+}
