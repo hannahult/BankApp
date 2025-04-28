@@ -1,12 +1,35 @@
 ﻿@page "/customer-portal"
+@inject NavigationManager NavigationManager
 
 <h2 class="text-center my-4">Customer Portal</h2>
 
-<div class="text-center">
-    <p>Enter your Customer ID to view your accounts:</p>
-    <NavLink class="btn btn-outline-primary" href="/customer/details">Find My Accounts</NavLink>
+<div class="container text-center">
+    <p>Enter your Customer ID to access your profile:</p>
+
+    <div class="input-group justify-content-center my-3" style="max-width: 400px; margin: auto;">
+        <input type="number" class="form-control" @bind="customerId" placeholder="Customer ID" />
+        <button class="btn btn-primary" @onclick="GoToDashboard">Go</button>
+    </div>
+
+    @if (errorMessage != null)
+    {
+        <p>@errorMessage</p>
+    }
 </div>
 
 @code {
+    private int customerId;
+    private string? errorMessage;
 
+    private void GoToDashboard()
+    {
+        if (customerId > 0)
+        {
+            NavigationManager.NavigateTo($"/customer-dashboard/{customerId}");
+        }
+        else
+        {
+            errorMessage = "Please enter a valid Customer ID.";
+        }
+    }
 }
