@@ -1,0 +1,62 @@
+﻿@page "/customers"
+@using BankBlazor.Client.ViewModels
+@inject HttpClient Http
+
+<h2 class="text-center my-4">Customer List</h2>
+
+@if (customers == null)
+{
+    <p>Loading customers...</p>
+}
+else if (!customers.Any())
+{
+    <p>No customers found.</p>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>@customer.CustomerId</td>
+                    <td>@customer.Givenname</td>
+                    <td>@customer.Surname</td>
+                    <td>@customer.City</td>
+                    <td>@customer.Country</td>
+                    <td>@customer.Emailaddress</td>
+                    <td>
+                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<CustomerReadViewModel>? customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            customers = await Http.GetFromJsonAsync<List<CustomerReadViewModel>>("https://localhost:7127/api/customer/");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}

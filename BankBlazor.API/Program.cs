@@ -12,6 +12,16 @@ namespace BankBlazor.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins("https://localhost:7249") 
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             builder.Services.AddControllers();
        
             builder.Services.AddOpenApi();
@@ -26,7 +36,8 @@ namespace BankBlazor.API
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            app.UseCors();
+
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
