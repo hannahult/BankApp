@@ -60,23 +60,24 @@ namespace BankBlazor.API.Servicez
 
             if (customer == null) return null;
 
-            var dto = new CustomerWithAccountsDTO
+            return new CustomerWithAccountsDTO
             {
                 CustomerId = customer.CustomerId,
                 Givenname = customer.Givenname,
                 Surname = customer.Surname,
+                Emailaddress = customer.Emailaddress,
+                Streetaddress = customer.Streetaddress,
+                City = customer.City,
+                Country = customer.Country,
                 Accounts = customer.Dispositions
-            .Select(d => new AccountReadDTO
-            {
-                AccountId = d.Account.AccountId,
-                Balance = d.Account.Balance,
-                Frequency = d.Account.Frequency,
-                Created = d.Account.Created
-            })
-            .ToList()
+                .Select(d => new AccountReadDTO
+                {
+                    AccountId = d.Account.AccountId,
+                    Balance = d.Account.Balance,
+                    Frequency = d.Account.Frequency,
+                    Created = d.Account.Created
+                }).ToList()
             };
-
-            return dto;
         }
         public async Task<Customer> CreateCustomerAsync(CustomerCreateDTO dto)
         {
