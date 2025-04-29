@@ -1,0 +1,67 @@
+﻿@page "/customer/all-transactions/{customerId:int}"
+@using BankBlazor.Client.ViewModels
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+<h2 class="text-center my-4">All Transactions</h2>
+
+@if (Transactions == null)
+{
+    <p>Loading transactions...</p>
+}
+else if (!Transactions.Any())
+{
+    <p>No transactions found for this customer.</p>
+}
+else
+{
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Date</th>
+                <th>Account ID</th>
+                <th>Type</th>
+                <th>Operation</th>
+                <th>Amount</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Transactions)
+            {
+                <tr>
+                    <td>@t.Date.ToShortDateString()</td>
+                    <td>@t.AccountId</td>
+                    <td>@t.Type</td>
+                    <td>@t.Operation</td>
+                    <td>@t.Amount.ToString("C")</td>
+                    <td>@t.Balance.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public List<TransactionReadViewModel> Transactions { get; set; } = new();
+    [Parameter]
+    public int customerId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTransactions();
+    }
+
+    private async Task LoadTransactions()
+    {
+        try
+        {
+            Transactions = await HttpClient.GetFromJsonAsync<List<TransactionReadViewModel>>(
+                $"https://localhost:7127/api/transaction/customer/{customerId}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to load transactions: " + ex.Message);
+        }
+    }
+}
