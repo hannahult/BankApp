@@ -1,4 +1,5 @@
 ﻿@page "/make-transfer"
+@using BankBlazor.Client.ViewModels
 @inject HttpClient HttpClient
 
 <h2 class="text-center my-4">Make a New Transfer</h2>
@@ -34,7 +35,7 @@
 </div>
 
 @code {
-    private TransferModel transferModel = new TransferModel();
+    private TransferViewModel transferModel = new TransferViewModel();
     private string? successMessage;
     private string? errorMessage;
 
@@ -42,13 +43,13 @@
     {
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("https://localhost:7127/api/transactions/transfer", transferModel);
+            var response = await HttpClient.PostAsJsonAsync("https://localhost:7127/api/transaction/transfer", transferModel);
 
             if (response.IsSuccessStatusCode)
             {
                 successMessage = "Transfer successful!";
                 errorMessage = null;
-                transferModel = new TransferModel(); // Nollställ formuläret
+                transferModel = new TransferViewModel();
             }
             else
             {
@@ -60,12 +61,5 @@
         {
             errorMessage = $"An error occurred: {ex.Message}";
         }
-    }
-
-    public class TransferModel
-    {
-        public int FromAccountId { get; set; }
-        public int ToAccountId { get; set; }
-        public decimal Amount { get; set; }
     }
 }
