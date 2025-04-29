@@ -34,8 +34,47 @@
 
     <div class="mt-5">
         <h4>Transaction History</h4>
+       
         <div class="card p-3 shadow-sm">
-            <p>Transaction history will be displayed here...</p>
+            @if (Transactions == null)
+            {
+                <p>Loading transactions...</p>
+            }
+            else if (!Transactions.Any())
+            {
+                <p>No transactions found for this customer.</p>
+            }
+            else
+            {
+                <table class="table table-bordered table-striped mt-3">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Date</th>
+                            <th>Account ID</th>
+                            <th>Type</th>
+                            <th>Operation</th>
+                            <th>Amount</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var transaction in Transactions)
+                        {
+                            <tr>
+                                <td>@transaction.Date.ToShortDateString()</td>
+                                <td>@transaction.AccountId</td>
+                                <td>@transaction.Type</td>
+                                <td>@transaction.Operation</td>
+                                <td>@transaction.Amount.ToString("C")</td>
+                                <td>@transaction.Balance.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <div class="text-end">
+                        <NavLink class="btn btn-sm btn-outline-primary" href="/all-transactions">View full history</NavLink>
+                    </div>
+                </table>
+            }
         </div>
 
         <div class="text-center mt-3">
@@ -46,6 +85,7 @@
 
 @code {
     public CustomerDetailsViewModel? CustomerDetailsViewModel { get; set; }
+    public List<TransactionReadViewModel> Transactions { get; set; } = new();
 
     [Parameter]
     public int customerId { get; set; }
@@ -53,6 +93,7 @@
     protected override async Task OnInitializedAsync()
     {
         await GetCustomerDetails();
+        await LoadTransactions();
     }
 
     private async Task GetCustomerDetails()
@@ -73,6 +114,23 @@
             {
                 ex.Message.ToString();
             }
+        }
+    }
+    private async Task LoadTransactions()
+    {
+        try
+        {
+            var allTransactions = await HttpClient.GetFromJsonAsync<List<TransactionReadViewModel>>(
+            $"https://localhost:7127/api/transaction/customer/{customerId}");
+
+            Transactions = allTransactions?
+                .OrderByDescending(t => t.Date)
+                .Take(5)
+                .ToList() ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to load transactions: " + ex.Message);
         }
     }
 }
