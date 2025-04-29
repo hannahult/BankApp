@@ -59,5 +59,13 @@ namespace BankBlazor.API.Controllerz
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("customer/{customerId}")]
+        public async Task<IActionResult> GetTransactionsByCustomerId(int customerId)
+        {
+            var transactions = await _transactionService.GetTransactionsByCustomerIdAsync(customerId);
+            if (!transactions.Any()) return NotFound("No transactions found for this customer.");
+            return Ok(transactions);
+        }
     }
 }

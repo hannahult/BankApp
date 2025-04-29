@@ -126,5 +126,28 @@ namespace BankBlazor.API.Servicez
 
             await _dbContext.SaveChangesAsync();
         }
+        public async Task<List<TransactionReadDTO>> GetTransactionsByCustomerIdAsync(int customerId)
+        {
+            var transactions = await _dbContext.Transactions
+                .Include(t => t.AccountNavigation)
+                .Where(t => t.AccountNavigation.Dispositions.Any(d => d.CustomerId == customerId))
+                .OrderByDescending(t => t.Date)
+                .Select(t => new TransactionReadDTO
+                {
+                    TransactionId = t.TransactionId,
+                    AccountId = t.AccountId,
+                    Date = t.Date,
+                    Type = t.Type,
+                    Operation = t.Operation,
+                    Amount = t.Amount,
+                    Balance = t.Balance,
+                    Symbol = t.Symbol,
+                    Bank = t.Bank,
+                    Account = t.Account
+                })
+                .ToListAsync();
+
+            return transactions;
+        }
     }
 }
