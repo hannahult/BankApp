@@ -8,6 +8,7 @@ namespace BankBlazor.API.Servicez.Interfaces
         Task<List<TransactionReadDTO>> GetTransactionsByAccountIdAsync(int accountId);
         Task<TransactionReadDTO> GetTransactionByIdAsync(int transactionId);
         Task<Transaction> CreateTransaction(TransactionCreateDTO transactionDto);
+        Task TransferAsync(TransferDTO transferDto);
 
     }
 }

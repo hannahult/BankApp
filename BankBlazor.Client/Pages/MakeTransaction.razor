@@ -1,0 +1,71 @@
+﻿@page "/make-transfer"
+@inject HttpClient HttpClient
+
+<h2 class="text-center my-4">Make a New Transfer</h2>
+
+<div class="container" style="max-width: 600px;">
+    <div class="card p-4 shadow-sm">
+        <div class="mb-3">
+            <label for="fromAccount" class="form-label">From Account ID</label>
+            <input type="number" id="fromAccount" class="form-control" @bind="transferModel.FromAccountId" />
+        </div>
+
+        <div class="mb-3">
+            <label for="toAccount" class="form-label">To Account ID</label>
+            <input type="number" id="toAccount" class="form-control" @bind="transferModel.ToAccountId" />
+        </div>
+
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount</label>
+            <input type="number" step="0.01" id="amount" class="form-control" @bind="transferModel.Amount" />
+        </div>
+
+        <button class="btn btn-success w-100" @onclick="MakeTransferAsync">Transfer</button>
+
+        @if (successMessage != null)
+        {
+            <div class="alert alert-success mt-3">@successMessage</div>
+        }
+        @if (errorMessage != null)
+        {
+            <div class="alert alert-danger mt-3">@errorMessage</div>
+        }
+    </div>
+</div>
+
+@code {
+    private TransferModel transferModel = new TransferModel();
+    private string? successMessage;
+    private string? errorMessage;
+
+    private async Task MakeTransferAsync()
+    {
+        try
+        {
+            var response = await HttpClient.PostAsJsonAsync("https://localhost:7127/api/transactions/transfer", transferModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                successMessage = "Transfer successful!";
+                errorMessage = null;
+                transferModel = new TransferModel(); // Nollställ formuläret
+            }
+            else
+            {
+                successMessage = null;
+                errorMessage = "Transfer failed. Please check your input.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+    }
+
+    public class TransferModel
+    {
+        public int FromAccountId { get; set; }
+        public int ToAccountId { get; set; }
+        public decimal Amount { get; set; }
+    }
+}

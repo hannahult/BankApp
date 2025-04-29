@@ -45,5 +45,19 @@ namespace BankBlazor.API.Controllerz
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("transfer")]
+        public async Task<IActionResult> MakeTransfer([FromBody] TransferDTO transferDto)
+        {
+            try
+            {
+                await _transactionService.TransferAsync(transferDto);
+                return Ok("Transfer successful!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

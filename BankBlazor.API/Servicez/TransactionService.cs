@@ -79,5 +79,52 @@ namespace BankBlazor.API.Servicez
 
             return transaction;
         }
+
+        public async Task TransferAsync(TransferDTO transferDto)
+        {
+            var fromAccount = await _dbContext.Accounts.FindAsync(transferDto.FromAccountId);
+            var toAccount = await _dbContext.Accounts.FindAsync(transferDto.ToAccountId);
+
+            if (fromAccount == null || toAccount == null)
+                throw new Exception("One or both accounts not found");
+
+            if (fromAccount.Balance < transferDto.Amount)
+                throw new Exception("Insufficient funds");
+
+            fromAccount.Balance -= transferDto.Amount;
+
+            toAccount.Balance += transferDto.Amount;
+
+            var withdrawal = new Transaction
+            {
+                AccountId = fromAccount.AccountId,
+                Date = DateOnly.FromDateTime(DateTime.Today),
+                Type = "Debit",
+                Operation = "Transfer Out",
+                Amount = -transferDto.Amount,
+                Balance = fromAccount.Balance,
+                Symbol = transferDto.Symbol,
+                Bank = transferDto.Bank,
+                Account = transferDto.Account
+            };
+
+            var deposit = new Transaction
+            {
+                AccountId = toAccount.AccountId,
+                Date = DateOnly.FromDateTime(DateTime.Today),
+                Type = "Credit",
+                Operation = "Transfer In",
+                Amount = transferDto.Amount,
+                Balance = toAccount.Balance,
+                Symbol = transferDto.Symbol,
+                Bank = transferDto.Bank,
+                Account = transferDto.Account
+            };
+
+            _dbContext.Transactions.Add(withdrawal);
+            _dbContext.Transactions.Add(deposit);
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }
