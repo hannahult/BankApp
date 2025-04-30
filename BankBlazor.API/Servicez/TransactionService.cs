@@ -1,8 +1,11 @@
 ﻿using BankBlazor.API.Contexts;
+using BankBlazor.API.Controllerz;
 using BankBlazor.API.DTOs;
 using BankBlazor.API.Models;
 using BankBlazor.API.Servicez.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BankBlazor.API.Servicez
 {
@@ -21,7 +24,7 @@ namespace BankBlazor.API.Servicez
                 .Select(t => new TransactionReadDTO
                 {
                     TransactionId = t.TransactionId,
-                    Date = t.Date,
+                    Date = t.Date.ToDateTime(TimeOnly.MinValue),
                     Type = t.Type,
                     Operation = t.Operation,
                     Amount = t.Amount,
@@ -40,7 +43,7 @@ namespace BankBlazor.API.Servicez
                 .Select(t => new TransactionReadDTO
                 {
                     TransactionId = t.TransactionId,
-                    Date = t.Date,
+                    Date = t.Date.ToDateTime(TimeOnly.MinValue),
                     Type = t.Type,
                     Operation = t.Operation,
                     Amount = t.Amount,
@@ -136,7 +139,7 @@ namespace BankBlazor.API.Servicez
                 {
                     TransactionId = t.TransactionId,
                     AccountId = t.AccountId,
-                    Date = t.Date,
+                    Date = t.Date.ToDateTime(TimeOnly.MinValue),
                     Type = t.Type,
                     Operation = t.Operation,
                     Amount = t.Amount,
@@ -148,6 +151,62 @@ namespace BankBlazor.API.Servicez
                 .ToListAsync();
 
             return transactions;
+        }
+        public async Task<List<TransactionReadDTO>> GetAllTransactionsAsync()
+        {
+            Console.WriteLine("Loading first 500 transactions only for performance");
+
+            return await _dbContext.Transactions
+                .OrderByDescending(t => t.Date)
+                .Take(500) // 👈 Begränsa till 500 för testning
+                .Select(t => new TransactionReadDTO
+                {
+                    TransactionId = t.TransactionId,
+                    AccountId = t.AccountId,
+                    Date = t.Date.ToDateTime(TimeOnly.MinValue),
+                    Type = t.Type,
+                    Operation = t.Operation,
+                    Amount = t.Amount,
+                    Balance = t.Balance,
+                    Symbol = t.Symbol,
+                    Bank = t.Bank,
+                    Account = t.Account
+                })
+                .ToListAsync();
+        }
+
+        public async Task<PagedResult<TransactionReadDTO>> GetTransactionsPagedAsync(int pageNumber, int pageSize)
+        {
+            var query = _dbContext.Transactions
+                .OrderByDescending(t => t.Date);
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(t => new TransactionReadDTO
+                {
+                    TransactionId = t.TransactionId,
+                    AccountId = t.AccountId,
+                    Date = t.Date.ToDateTime(TimeOnly.MinValue),
+                    Type = t.Type,
+                    Operation = t.Operation,
+                    Amount = t.Amount,
+                    Balance = t.Balance,
+                    Symbol = t.Symbol,
+                    Bank = t.Bank,
+                    Account = t.Account
+                })
+                .ToListAsync();
+
+            return new PagedResult<TransactionReadDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
     }
 }

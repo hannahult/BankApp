@@ -1,0 +1,122 @@
+﻿@page "/employee/transactions"
+@using BankBlazor.Client.ViewModels
+@inject HttpClient HttpClient
+
+<h2 class="text-center my-4">All Transactions</h2>
+
+@if (isLoading)
+{
+    <div class="text-center my-4">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p>Loading transactions...</p>
+    </div>
+}
+else if (PagedTransactions.Count == 0)
+{
+    <p>No transactions found.</p>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Date</th>
+                <th>Account ID</th>
+                <th>Type</th>
+                <th>Operation</th>
+                <th>Amount</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in PagedTransactions)
+            {
+                <tr>
+                    <td>@t.Date.ToShortDateString()</td>
+                    <td>@t.AccountId</td>
+                    <td>@t.Type</td>
+                    <td>@t.Operation</td>
+                    <td>@t.Amount.ToString("C")</td>
+                    <td>@t.Balance.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <button class="btn btn-outline-primary" @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
+        <span>Page @currentPage of @totalPages</span>
+        <button class="btn btn-outline-primary" @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+    </div>
+}
+
+@code {
+    private List<TransactionReadViewModel> AllTransactions = new();
+    private List<TransactionReadViewModel> PagedTransactions = new();
+   
+    private bool isLoading = true;
+
+    private int currentPage = 1;
+    private int pageSize = 20;
+    private int totalItems;
+    private int totalPages => (int)Math.Ceiling((double)totalItems / pageSize);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPagedTransactions();
+    }
+
+    private async Task LoadPagedTransactions()
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var result = await HttpClient.GetFromJsonAsync<PagedResult<TransactionReadViewModel>>(
+                $"https://localhost:7127/api/transaction/paged?pageNumber={currentPage}&pageSize={pageSize}");
+
+            if (result != null)
+            {
+                PagedTransactions = result.Items;
+                totalItems = result.TotalCount;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error loading paged transactions: " + ex.Message);
+        }
+
+        isLoading = false;
+    }
+   
+
+    private void UpdatePagedTransactions()
+    {
+        PagedTransactions = AllTransactions
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
+
+    private async Task NextPage()
+    {
+        if (currentPage < totalPages)
+        {
+            currentPage++;
+            await LoadPagedTransactions();
+        }
+    }
+
+    private async Task PreviousPage()
+    {
+        if (currentPage > 1)
+        {
+            currentPage--;
+            await LoadPagedTransactions();
+        }
+    }
+}
+    

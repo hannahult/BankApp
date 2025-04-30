@@ -67,5 +67,19 @@ namespace BankBlazor.API.Controllerz
             if (!transactions.Any()) return NotFound("No transactions found for this customer.");
             return Ok(transactions);
         }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllTransactions()
+        {
+            var transactions = await _transactionService.GetAllTransactionsAsync();
+            return Ok(transactions);
+        }
+
+        [HttpGet("paged")]
+        public async Task<ActionResult<PagedResult<TransactionReadDTO>>> GetPagedTransactions(int pageNumber = 1, int pageSize = 20)
+        {
+            var result = await _transactionService.GetTransactionsPagedAsync(pageNumber, pageSize);
+            return Ok(result);
+        }
     }
 }
