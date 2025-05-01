@@ -7,6 +7,6 @@ namespace BankBlazor.API.Servicez.Interfaces
     {
         Task<List<AccountReadDTO>> GetAccountsByCustomerIdAsync(int customerId);
         Task<AccountReadDTO> GetAccountByIdAsync(int accountId);
-        Task<PagedResult<AccountReadDTO>> GetAccountsPagedAsync(int pageNumber, int pageSize);
+        Task<PagedResult<AccountReadDTO>> GetAllAccountsAsync(int pageNumber, int pageSize);
     }
 }

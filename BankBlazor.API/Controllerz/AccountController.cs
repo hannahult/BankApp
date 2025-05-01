@@ -1,4 +1,6 @@
-﻿using BankBlazor.API.Servicez.Interfaces;
+﻿using BankBlazor.API.DTOs;
+using BankBlazor.API.Models;
+using BankBlazor.API.Servicez.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,11 +33,11 @@ namespace BankBlazor.API.Controllerz
             return Ok(account);
         }
 
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAllAccounts()
+        [HttpGet("paged")]
+        public async Task<ActionResult<PagedResult<AccountReadDTO>>> GetPagedAccounts([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
         {
-            var accounts = await _accountService.GetAllAccountsAsync();
-            return Ok(accounts);
+            var result = await _accountService.GetAllAccountsAsync(pageNumber, pageSize);
+            return Ok(result);
         }
     }
 }

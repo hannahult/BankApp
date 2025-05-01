@@ -16,13 +16,12 @@ namespace BankBlazor.API.Controllerz
         {
             _transactionService = transactionService;
         }
-
         [HttpGet("account/{accountId}")]
         public async Task<IActionResult> GetTransactionsByAccountId(int accountId)
         {
             var transactions = await _transactionService.GetTransactionsByAccountIdAsync(accountId);
-            if (transactions == null || !transactions.Any()) return NotFound();
-            return Ok(transactions); 
+            if (!transactions.Any()) return NotFound();
+            return Ok(transactions);
         }
 
         [HttpGet("{transactionId}")]

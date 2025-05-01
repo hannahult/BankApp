@@ -58,7 +58,7 @@ namespace BankBlazor.API.Servicez
                     AccountId = a.AccountId,
                     Balance = a.Balance,
                     Frequency = a.Frequency,
-                    Created = a.Created
+                    Created = a.Created.ToDateTime(TimeOnly.MinValue)
                 })
                 .ToListAsync();
 

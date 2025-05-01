@@ -6,59 +6,94 @@
 
 @if (isLoading)
 {
-    <div class="text-center">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <p>Loading accounts...</p>
-    </div>
+    <div class="text-center"><div class="spinner-border text-primary" role="status"></div></div>
 }
-else if (Accounts == null || !Accounts.Any())
+else if (!PagedAccounts.Any())
 {
     <p>No accounts found.</p>
 }
 else
 {
-    <table class="table table-striped table-hover">
+    <table class="table table-hover">
         <thead class="table-dark">
             <tr>
                 <th>Account ID</th>
                 <th>Balance</th>
                 <th>Frequency</th>
                 <th>Created</th>
+                <th> </th> 
             </tr>
         </thead>
         <tbody>
-            @foreach (var a in Accounts)
+            @foreach (var a in PagedAccounts)
             {
                 <tr>
                     <td>@a.AccountId</td>
                     <td>@a.Balance.ToString("C")</td>
                     <td>@a.Frequency</td>
                     <td>@a.Created.ToShortDateString()</td>
+                    <td>
+                        <NavLink class="btn btn-outline-info btn-sm" href=@($"/accounts/{a.AccountId}/transactions")>
+                            View Transactions
+                        </NavLink>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <button class="btn btn-outline-primary" @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
+        <span>Page @currentPage of @totalPages</span>
+        <button class="btn btn-outline-primary" @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+    </div>
 }
 
 @code {
-    private List<AccountReadViewModel> Accounts = new();
+    private List<AccountReadViewModel> PagedAccounts = new();
+    private int currentPage = 1;
+    private int pageSize = 20;
+    private int totalItems;
+    private int totalPages => (int)Math.Ceiling((double)totalItems / pageSize);
     private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        await LoadAccounts();
+    }
+
+    private async Task LoadAccounts()
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        var result = await HttpClient.GetFromJsonAsync<PagedResult<AccountReadViewModel>>(
+            $"https://localhost:7127/api/account/paged?pageNumber={currentPage}&pageSize={pageSize}");
+
+        if (result != null)
         {
-            Accounts = await HttpClient.GetFromJsonAsync<List<AccountReadViewModel>>("https://localhost:7127/api/account/all");
+            PagedAccounts = result.Items;
+            totalItems = result.TotalCount;
         }
-        catch (Exception ex)
+
+        isLoading = false;
+    }
+
+    private async Task NextPage()
+    {
+        if (currentPage < totalPages)
         {
-            Console.WriteLine("Error loading accounts: " + ex.Message);
+            currentPage++;
+            await LoadAccounts();
         }
-        finally
+    }
+
+    private async Task PreviousPage()
+    {
+        if (currentPage > 1)
         {
-            isLoading = false;
+            currentPage--;
+            await LoadAccounts();
         }
     }
 }

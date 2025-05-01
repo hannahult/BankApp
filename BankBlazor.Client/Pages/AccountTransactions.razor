@@ -1,0 +1,65 @@
+﻿@page "/accounts/{accountId:int}/transactions"
+@inject HttpClient HttpClient
+@using BankBlazor.Client.ViewModels
+
+<h2 class="text-center my-4">Transactions for Account @accountId</h2>
+
+@if (isLoading)
+{
+    <p>Loading transactions...</p>
+}
+else if (Transactions == null || !Transactions.Any())
+{
+    <p>No transactions found for this account.</p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Operation</th>
+                <th>Amount</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Transactions)
+            {
+                <tr>
+                    <td>@t.Date.ToShortDateString()</td>
+                    <td>@t.Type</td>
+                    <td>@t.Operation</td>
+                    <td>@t.Amount.ToString("C")</td>
+                    <td>@t.Balance.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public int accountId { get; set; }
+
+    private List<TransactionReadViewModel> Transactions = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Transactions = await HttpClient.GetFromJsonAsync<List<TransactionReadViewModel>>(
+                $"https://localhost:7127/api/transaction/account/{accountId}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error loading transactions: " + ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
