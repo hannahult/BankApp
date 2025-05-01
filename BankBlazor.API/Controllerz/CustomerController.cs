@@ -39,6 +39,12 @@ namespace BankBlazor.API.Controllerz
             if (customer == null) return NotFound();
             return Ok(customer);
         }
+        [HttpGet("paged")]
+        public async Task<ActionResult<PagedResult<CustomerReadDTO>>> GetPagedCustomers(int pageNumber = 1, int pageSize = 50)
+        {
+            var result = await _customerService.GetCustomersPagedAsync(pageNumber, pageSize);
+            return Ok(result);
+        }
 
         [HttpPost]
         public async Task<ActionResult<Customer>> CreateCustomer(CustomerCreateDTO dto)

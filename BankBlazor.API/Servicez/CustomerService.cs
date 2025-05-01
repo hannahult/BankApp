@@ -102,6 +102,35 @@ namespace BankBlazor.API.Servicez
             await _dbContext.SaveChangesAsync();
             return newCustomer;
         }
+        public async Task<PagedResult<CustomerReadDTO>> GetCustomersPagedAsync(int pageNumber, int pageSize)
+        {
+            var query = _dbContext.Customers.OrderBy(c => c.CustomerId);
 
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(c => new CustomerReadDTO
+                {
+                    CustomerId = c.CustomerId,
+                    Givenname = c.Givenname,
+                    Surname = c.Surname,
+                    Emailaddress = c.Emailaddress,
+                    Telephonenumber = c.Telephonenumber,
+                    Streetaddress = c.Streetaddress,
+                    City = c.City,
+                    Country = c.Country
+                })
+                .ToListAsync();
+
+            return new PagedResult<CustomerReadDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
     }
 }
