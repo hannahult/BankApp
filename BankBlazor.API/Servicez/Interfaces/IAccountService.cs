@@ -1,4 +1,5 @@
 ﻿using BankBlazor.API.DTOs;
+using BankBlazor.API.Models;
 
 namespace BankBlazor.API.Servicez.Interfaces
 {
@@ -6,6 +7,6 @@ namespace BankBlazor.API.Servicez.Interfaces
     {
         Task<List<AccountReadDTO>> GetAccountsByCustomerIdAsync(int customerId);
         Task<AccountReadDTO> GetAccountByIdAsync(int accountId);
-        Task<List<AccountReadDTO>> GetAllAccountsAsync();
+        Task<PagedResult<AccountReadDTO>> GetAccountsPagedAsync(int pageNumber, int pageSize);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BankBlazor.API.Contexts;
 using BankBlazor.API.DTOs;
+using BankBlazor.API.Models;
 using BankBlazor.API.Servicez.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,18 +44,31 @@ namespace BankBlazor.API.Servicez
 
             return account;
         }
-        public async Task<List<AccountReadDTO>> GetAllAccountsAsync()
+        public async Task<PagedResult<AccountReadDTO>> GetAllAccountsAsync(int pageNumber, int pageSize)
         {
-            return await _dbContext.Accounts
-                .OrderByDescending(a => a.Balance)
+            var query = _dbContext.Accounts.OrderByDescending(a => a.Created);
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(a => new AccountReadDTO
                 {
                     AccountId = a.AccountId,
                     Balance = a.Balance,
-                    Created = a.Created,
-                    Frequency = a.Frequency
+                    Frequency = a.Frequency,
+                    Created = a.Created
                 })
                 .ToListAsync();
+
+            return new PagedResult<AccountReadDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
     }
 }
