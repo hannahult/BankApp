@@ -43,6 +43,18 @@ namespace BankBlazor.API.Servicez
 
             return account;
         }
-
+        public async Task<List<AccountReadDTO>> GetAllAccountsAsync()
+        {
+            return await _dbContext.Accounts
+                .OrderByDescending(a => a.Balance)
+                .Select(a => new AccountReadDTO
+                {
+                    AccountId = a.AccountId,
+                    Balance = a.Balance,
+                    Created = a.Created,
+                    Frequency = a.Frequency
+                })
+                .ToListAsync();
+        }
     }
 }

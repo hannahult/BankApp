@@ -30,5 +30,12 @@ namespace BankBlazor.API.Controllerz
             if (account == null) return NotFound();
             return Ok(account);
         }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllAccounts()
+        {
+            var accounts = await _accountService.GetAllAccountsAsync();
+            return Ok(accounts);
+        }
     }
 }
