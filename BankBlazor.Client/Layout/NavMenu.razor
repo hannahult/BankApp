@@ -1,13 +1,20 @@
 ﻿<header>
     <NavLink href="/" class="logo">
-            <img src="images/logo.png" alt="Bank Blazor Logo">
-            <h1 class="header-text">Bank Blazor</h1>
+        <img src="images/logo.png" alt="Bank Blazor Logo" />
+        <span class="header-text">Bank Blazor</span>
     </NavLink>
+
     <nav>
         <ul class="nav-items">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#dashboard">Dashboard</a></li>
-            <li><a href="#transactions">Transactions</a></li>
+            <li>
+                <NavLink href="/" class="nav-link" Match="NavLinkMatch.All">Home</NavLink>
+            </li>
+            <li>
+                <NavLink href="/customer-portal" class="nav-link">Customer Portal</NavLink>
+            </li>
+            <li>
+                <NavLink href="/employee-portal" class="nav-link">Employee Portal</NavLink>
+            </li>
         </ul>
     </nav>
 </header>

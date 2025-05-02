@@ -1,12 +1,15 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+    color: #333;
 }
 
 h1:focus {
     outline: none;
+}
+h1, h2, h3, h4 {
+    color: #4B0082; 
+    font-weight: 600;
 }
 
 a, .btn-link {
@@ -105,8 +108,6 @@ code {
     color: #c02d76;
 }
 
-/*CSS code for Bank Blazor App*/
-
 .app-body {
     display: flex;
     flex-direction: column;
@@ -115,13 +116,14 @@ code {
 
 
 header {
-    background: #000;
+    background: #290046;
     color: white;
-    padding: 15px;
-    text-align: center;
+    padding: 15px 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
 }
 
 
@@ -131,9 +133,12 @@ header {
 
 
 .logo {
-    margin-left: 10rem;
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    color: white;
+    color: white; 
+    font-size: 1.8rem;
+    font-weight: bold;
 }
 
     .logo:hover {
@@ -141,7 +146,7 @@ header {
         color: white;
     }
     .logo img {
-        height: 50px;
+        height: 40px;
         margin-right: 10px;
     }
 
@@ -156,13 +161,33 @@ nav ul {
     }
 
         nav ul li a {
-            color: white;
+            color: #87CEFA;
+            font-weight: 500;
             text-decoration: none;
         }
 
+            nav ul li a:hover {
+                color: #FFFFFF;
+                border-bottom: 2px solid #4B0082; 
+            }
+
 .nav-items {
-    display: contents;
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
 }
+
+.nav-link {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+    .nav-link.active {
+        border-bottom: 2px solid #87CEFA;
+    }
 
 .hero-img {
     width: 100%;
@@ -170,12 +195,47 @@ nav ul {
     object-fit: cover;
 }
 
+.hero-banner {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+}
+
+    .hero-banner::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #4B0082, #87CEFA);
+        opacity: 0.7;
+        z-index: 1;
+    }
+
+    .hero-banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        z-index: 0;
+        position: relative;
+    }
+
 .container {
     width: 80%;
     margin: 20px auto;
     background: white;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.card,
+.table,
+.list-container {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 #login {
@@ -192,22 +252,120 @@ label, input, button {
     padding: 10px;
 }
 
-button {
-    background: #0071c1;
+button, .btn-primary {
+    background-color: #4B0082;
     color: white;
     border: none;
-    cursor: pointer;
-    max-width: 100px;
 }
 
-    button:hover {
-        background: #0056b3;
+    button:hover, .btn-primary:hover {
+        background-color: #37115c;
     }
+}
+
+.holiday-announcement {
+    padding: 1rem;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.holiday-card {
+    position: absolute;
+    top: 100px; 
+    left: 30px;
+    width: 260px;
+    background: white;
+    border-left: 5px solid #87CEFA; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'Segoe UI', sans-serif;
+    z-index: 100;
+}
+
+    .holiday-card h5 {
+        margin-top: 0;
+        font-size: 1rem;
+        color: #4B0082; 
+    }
+
+    .holiday-card p {
+        margin: 0.3rem 0;
+        color: #333;
+        font-size: 0.95rem;
+    }
+.btn-purple {
+    background-color: #4B0082;
+    color: white;
+    border: none;
+}
+
+    .btn-purple:hover {
+        background-color: #3a006b;
+    }
+
+.btn-darkblue {
+    background-color: #1b3a63;
+    color: white;
+    border: none;
+}
+
+    .btn-darkblue:hover {
+        background-color: #142c4a;
+    }
+
+.btn-lightblue {
+    background-color: #87CEFA;
+    color: black;
+    border: none;
+}
+
+    .btn-lightblue:hover {
+        background-color: #6ec5f4;
+    }
+.home-wrapper {
+    position: relative;5
+}
+
+.list-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.list-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #4B0082;
+    margin-bottom: 1rem;
+}
+.dashboard-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+}
+
+.profile-card, .account-card {
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+}
+
+    .profile-card h4, .account-card h5 {
+        color: #4B0082;
+    }
+
 
 footer {
     text-align: center;
     padding: 10px;
-    background: #000;
+    background: #290046;
     color: white;
     margin-top: 20px;
     min-height: 50px;

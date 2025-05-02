@@ -3,7 +3,8 @@
 @using BankBlazor.Client.ViewModels
 @using Newtonsoft.Json
 
-<h2 class="text-center my-4">All Transactions for Customer @customerId</h2>
+<div class="list-container">
+    <h2 class="list-title">Transactions for customer @customerId</h2>
 
 @if (isLoading)
 {
@@ -16,7 +17,7 @@ else if (!Transactions.Any())
 else
 {
     <table class="table table-hover">
-        <thead class="table-dark">
+        <thead class="table-light">
             <tr>
                 <th>Date</th>
                 <th>Account ID</th>
@@ -47,6 +48,7 @@ else
         <button class="btn btn-outline-primary" @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
     </div>
 }
+</div>
 
 @code {
     [Parameter] public int customerId { get; set; }

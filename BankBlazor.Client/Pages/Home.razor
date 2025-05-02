@@ -2,9 +2,10 @@
 @inject HttpClient Http
 @using BankBlazor.Client.ViewModels
 
-<div class="hero-banner">
+<div class="home-wrapper">
+<section class="hero-banner">
     <img src="/images/hero.jpg" alt="Bank Banner" />
-</div>
+</section>
 
 <div class="text-center mt-5">
     <h1 class="display-4 fw-bold">Welcome to Bank Blazor</h1>
@@ -12,38 +13,18 @@
 
     <div class="mt-4">
         <NavLink class="btn btn-primary btn-lg m-3" href="/customer-portal">Customer</NavLink>
-        <NavLink class="btn btn-secondary btn-lg m-3" href="/employee-portal">Employee</NavLink>
+        <NavLink class="btn btn-primary btn-lg m-3" href="/employee-portal">Employee</NavLink>
     </div>
 </div>
 @if (Holiday != null)
 {
-    <section class="text-center mt-4">
-        <h5>Next Scottish bank holiday:</h5>
-        <p><strong>@Holiday.Title</strong> on <strong>@Holiday.Date.ToString("yyyy-MM-dd")</strong></p>
-    </section>
+    <div class="holiday-card">
+        <h5>Next Scottish bank holiday</h5>
+        <p><strong>@Holiday.Title</strong></p>
+        <p>@Holiday.Date.ToString("yyyy-MM-dd")</p>
+    </div>
 }
-
-<style>
-    .hero-banner {
-        width: 100%;
-        height: 150px;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-        .hero-banner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-        }
-
-    .btn {
-        min-width: 160px;
-        font-size: 1.1rem;
-    }
-</style>
+</div>
 
 @code {
     public HolidayViewModel? Holiday { get; set; }
