@@ -1,7 +1,7 @@
-﻿using BankBlazor.API.DTOs;
-using BankBlazor.API.Models;
+﻿using BankBlazor.Shared.DTOs;
+using BankBlazor.Shared.Models;
 
-namespace BankBlazor.API.Servicez.Interfaces
+namespace BankApp.Shared.Interfaces
 {
     public interface IAccountService
     {

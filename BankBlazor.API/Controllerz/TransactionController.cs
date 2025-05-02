@@ -1,6 +1,6 @@
-﻿using BankBlazor.API.DTOs;
-using BankBlazor.API.Models;
-using BankBlazor.API.Servicez.Interfaces;
+﻿using BankBlazor.Shared.DTOs;
+using BankBlazor.Shared.Models;
+using BankApp.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +32,7 @@ namespace BankBlazor.API.Controllerz
             return Ok(transaction);
         }
         [HttpPost]
-        public async Task<ActionResult<Transaction>> CreateTransaction(TransactionCreateDTO transactionDto)
+        public async Task<ActionResult<TransactionReadDTO>> CreateTransaction(TransactionCreateDTO transactionDto)
         {
             try
             {
@@ -96,12 +96,26 @@ namespace BankBlazor.API.Controllerz
         }
 
         [HttpPost("deposit")]
-        public async Task<ActionResult<Transaction>> Deposit(TransactionCreateDTO dto) 
+        public async Task<ActionResult<TransactionReadDTO>> Deposit(TransactionCreateDTO dto) 
         {
             try
             {
-                var transaction = await _transactionService.WithdrawAsync(dto);
-                return CreatedAtAction(nameof(GetTransactionById), new { transactionId = transaction.TransactionId }, transaction);
+                var transaction = await _transactionService.DepositAsync(dto);
+                var result = new TransactionReadDTO
+                {
+                    TransactionId = transaction.TransactionId,
+                    AccountId = transaction.AccountId,
+                    Date = transaction.Date,
+                    Type = transaction.Type,
+                    Operation = transaction.Operation,
+                    Amount = transaction.Amount,
+                    Balance = transaction.Balance,
+                    Symbol = transaction.Symbol,
+                    Bank = transaction.Bank,
+                    Account = transaction.Account
+                };
+
+                return CreatedAtAction(nameof(GetTransactionById), new { transactionId = result.TransactionId }, result);
             }
             catch (Exception ex)
             {
@@ -110,13 +124,27 @@ namespace BankBlazor.API.Controllerz
         }
 
         [HttpPost("withdraw")]
-        public async Task<ActionResult<Transaction>> Withdraw(TransactionCreateDTO dto) 
+        public async Task<ActionResult<TransactionReadDTO>> Withdraw(TransactionCreateDTO dto) 
         {
 
             try
             {
                 var transaction = await _transactionService.WithdrawAsync(dto);
-                return CreatedAtAction(nameof(GetTransactionById), new { transactionId = transaction.TransactionId }, transaction);
+                var result = new TransactionReadDTO
+                {
+                    TransactionId = transaction.TransactionId,
+                    AccountId = transaction.AccountId,
+                    Date = transaction.Date,
+                    Type = transaction.Type,
+                    Operation = transaction.Operation,
+                    Amount = transaction.Amount,
+                    Balance = transaction.Balance,
+                    Symbol = transaction.Symbol,
+                    Bank = transaction.Bank,
+                    Account = transaction.Account
+                };
+
+                return CreatedAtAction(nameof(GetTransactionById), new { transactionId = result.TransactionId }, result);
             }
             catch (Exception ex)
             {

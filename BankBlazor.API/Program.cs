@@ -1,5 +1,5 @@
 
-using BankBlazor.API.Servicez.Interfaces;
+using BankApp.Shared.Interfaces;
 using BankBlazor.API.Servicez;
 using BankBlazor.API.Contexts;
 using Microsoft.EntityFrameworkCore;

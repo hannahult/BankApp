@@ -1,7 +1,7 @@
-﻿using BankBlazor.API.DTOs;
-using BankBlazor.API.Models;
+﻿using BankBlazor.Shared.DTOs;
+using BankBlazor.Shared.Models;
 using BankBlazor.API.Servicez;
-using BankBlazor.API.Servicez.Interfaces;
+using BankApp.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,20 +44,6 @@ namespace BankBlazor.API.Controllerz
         {
             var result = await _customerService.GetCustomersPagedAsync(pageNumber, pageSize);
             return Ok(result);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Customer>> CreateCustomer(CustomerCreateDTO dto)
-        {
-            try
-            {
-                var newCustomer = await _customerService.CreateCustomerAsync(dto);
-                return CreatedAtAction(nameof(GetCustomerById), new { customerId = newCustomer.CustomerId }, newCustomer);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
     }
 }

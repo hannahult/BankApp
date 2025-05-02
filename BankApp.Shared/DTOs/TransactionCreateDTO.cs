@@ -1,4 +1,4 @@
-﻿namespace BankBlazor.API.DTOs
+﻿namespace BankBlazor.Shared.DTOs
 {
     public class TransactionCreateDTO
     {

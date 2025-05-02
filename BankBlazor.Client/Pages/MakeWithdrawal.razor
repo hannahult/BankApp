@@ -1,8 +1,8 @@
-﻿@page "/make-deposit"
+﻿@page "/make-withdrawal"
 @using BankBlazor.Client.ViewModels
 @inject HttpClient HttpClient
 
-<h2 class="text-center my-4">Make a new deposit</h2>
+<h2 class="text-center my-4">Make a new withdrawal</h2>
 
 <div class="container" style="max-width: 600px;">
     <div class="card p-4 shadow-sm">
@@ -16,7 +16,7 @@
             <input type="number" step="0.01" id="amount" class="form-control" @bind="transactionCreateViewModel.Amount" />
         </div>
 
-        <button class="btn btn-success w-100" @onclick="MakeDepositAsync">Make Deposit</button>
+        <button class="btn btn-success w-100" @onclick="MakeWithdrawalAsync">Make Withdrawal</button>
 
         @if (successMessage != null)
         {
@@ -34,22 +34,23 @@
     private string? successMessage;
     private string? errorMessage;
 
-    private async Task MakeDepositAsync()
+    private async Task MakeWithdrawalAsync()
     {
         try
         {
-            var response = await HttpClient.PostAsJsonAsync("https://localhost:7127/api/transaction/deposit", transactionCreateViewModel);
+            var response = await HttpClient.PostAsJsonAsync("https://localhost:7127/api/transaction/withdraw", transactionCreateViewModel);
 
             if (response.IsSuccessStatusCode)
             {
-                successMessage = "Deposit successful!";
+                successMessage = "Withdrawal successful!";
                 errorMessage = null;
                 transactionCreateViewModel = new TransactionCreateViewModel();
             }
             else
             {
+                var message = await response.Content.ReadAsStringAsync();
                 successMessage = null;
-                errorMessage = "Deposit failed. Please check your input.";
+                errorMessage = $"Withdrawal failed: {message}";
             }
         }
         catch (Exception ex)

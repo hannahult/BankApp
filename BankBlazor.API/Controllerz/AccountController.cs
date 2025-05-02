@@ -1,6 +1,6 @@
-﻿using BankBlazor.API.DTOs;
-using BankBlazor.API.Models;
-using BankBlazor.API.Servicez.Interfaces;
+﻿using BankBlazor.Shared.DTOs;
+using BankBlazor.Shared.Models;
+using BankApp.Shared.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

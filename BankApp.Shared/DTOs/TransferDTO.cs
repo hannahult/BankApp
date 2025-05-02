@@ -1,9 +1,9 @@
-﻿namespace BankBlazor.API.DTOs
+﻿namespace BankBlazor.Shared.DTOs
 {
-    public class TransactionCreateDTO
+    public class TransferDTO
     {
-        public int AccountId { get; set; }
-        public DateOnly Date { get; set; }
+        public int FromAccountId { get; set; }
+        public int ToAccountId { get; set; }
         public decimal Amount { get; set; }
         public string? Symbol { get; set; }
         public string? Bank { get; set; }

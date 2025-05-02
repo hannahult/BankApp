@@ -1,4 +1,4 @@
-﻿namespace BankBlazor.API.Models
+﻿namespace BankBlazor.Shared.Models
 {
     public class PagedResult<T>
     {

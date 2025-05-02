@@ -1,13 +1,12 @@
-﻿using BankBlazor.API.DTOs;
-using BankBlazor.API.Models;
+﻿using BankBlazor.Shared.DTOs;
+using BankBlazor.Shared.Models;
 
-namespace BankBlazor.API.Servicez.Interfaces
+namespace BankApp.Shared.Interfaces
 {
     public interface ICustomerService
     {
         Task<List<CustomerReadDTO>> GetAllCustomersAsync();
         Task<CustomerReadDTO> GetCustomerByIdAsync(int customerId);
-        Task<Customer> CreateCustomerAsync(CustomerCreateDTO dto);
         Task<CustomerWithAccountsDTO?> GetCustomerWithAccountsAsync(int customerId);
         Task<PagedResult<CustomerReadDTO>> GetCustomersPagedAsync(int pageNumber, int pageSize);
     }
