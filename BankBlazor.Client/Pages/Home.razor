@@ -1,4 +1,6 @@
 ﻿@page "/"
+@inject HttpClient Http
+@using BankBlazor.Client.ViewModels
 
 <div class="hero-banner">
     <img src="/images/hero.jpg" alt="Bank Banner" />
@@ -13,6 +15,13 @@
         <NavLink class="btn btn-secondary btn-lg m-3" href="/employee-portal">Employee</NavLink>
     </div>
 </div>
+@if (Holiday != null)
+{
+    <section class="text-center mt-4">
+        <h5>Next Scottish bank holiday:</h5>
+        <p><strong>@Holiday.Title</strong> on <strong>@Holiday.Date.ToString("yyyy-MM-dd")</strong></p>
+    </section>
+}
 
 <style>
     .hero-banner {
@@ -35,4 +44,20 @@
         font-size: 1.1rem;
     }
 </style>
+
+@code {
+    public HolidayViewModel? Holiday { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Holiday = await Http.GetFromJsonAsync<HolidayViewModel>("https://localhost:7127/api/external/bank-holidays");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to load holiday: " + ex.Message);
+        }
+    }
+}
 
