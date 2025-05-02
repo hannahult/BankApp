@@ -33,6 +33,7 @@ else
                 <th>Address</th>
                 <th>City</th>
                 <th>Country</th>
+                <th> </th>
             </tr>
         </thead>
         <tbody>
@@ -46,6 +47,10 @@ else
                     <td>@c.Streetaddress</td>
                     <td>@c.City</td>
                     <td>@c.Country</td>
+                        <NavLink class="btn btn-outline-info btn-sm"
+                                 href=@($"/customer-dashboard/{c.CustomerId}")>
+                            View Dashboard
+                        </NavLink>
                 </tr>
             }
         </tbody>
