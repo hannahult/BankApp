@@ -129,6 +129,68 @@ namespace BankBlazor.API.Servicez
 
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<Transaction> DepositAsync(TransactionCreateDTO transactionDto)
+        {
+            var account = await _dbContext.Accounts.FindAsync(transactionDto.AccountId);
+            if (account == null)
+                throw new Exception("Account not found");
+
+            var newBalance = account.Balance + transactionDto.Amount;
+
+            var transaction = new Transaction
+            {
+                AccountId = transactionDto.AccountId,
+                Date = DateOnly.FromDateTime(DateTime.Now),
+                Type = "Credit",
+                Operation = "Deposit",
+                Amount = transactionDto.Amount,
+                Balance = newBalance,
+                Symbol = transactionDto.Symbol,
+                Bank = transactionDto.Bank,
+                Account = transactionDto.Account
+            };
+
+            account.Balance = newBalance;
+
+            _dbContext.Transactions.Add(transaction);
+            await _dbContext.SaveChangesAsync();
+
+            return transaction;
+        }
+
+        public async Task<Transaction> WithdrawAsync(TransactionCreateDTO transactionDto)
+        {
+            var account = await _dbContext.Accounts.FindAsync(transactionDto.AccountId);
+            if (account == null)
+                throw new Exception("Account not found");
+
+            if (account.Balance < transactionDto.Amount)
+                throw new Exception("Insufficient funds.");
+
+            var newBalance = account.Balance - transactionDto.Amount;
+
+            var transaction = new Transaction
+            {
+                AccountId = transactionDto.AccountId,
+                Date = DateOnly.FromDateTime(DateTime.Now),
+                Type = "Debit",
+                Operation = "Withdrawal",
+                Amount = transactionDto.Amount,
+                Balance = newBalance,
+                Symbol = transactionDto.Symbol,
+                Bank = transactionDto.Bank,
+                Account = transactionDto.Account
+            };
+
+            account.Balance = newBalance;
+
+            _dbContext.Transactions.Add(transaction);
+            await _dbContext.SaveChangesAsync();
+
+            return transaction;
+        }
+
         public async Task<List<TransactionReadDTO>> GetTransactionsByCustomerIdAsync(int customerId)
         {
             var transactions = await _dbContext.Transactions

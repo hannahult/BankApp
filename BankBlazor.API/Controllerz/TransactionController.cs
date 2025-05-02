@@ -80,17 +80,49 @@ namespace BankBlazor.API.Controllerz
             var result = await _transactionService.GetTransactionsPagedAsync(pageNumber, pageSize);
             return Ok(result);
         }
+
         [HttpGet("customer/{customerId}/paged")]
         public async Task<ActionResult<PagedResult<TransactionReadDTO>>> GetCustomerTransactionsPaged(int customerId, int pageNumber = 1, int pageSize = 20)
         {
             var result = await _transactionService.GetCustomerTransactionsPagedAsync(customerId, pageNumber, pageSize);
             return Ok(result);
         }
+
         [HttpGet("account/{accountId}/paged")]
         public async Task<ActionResult<PagedResult<TransactionReadDTO>>> GetAccountTransactionsPaged(int accountId, int pageNumber = 1, int pageSize = 20)
         {
             var result = await _transactionService.GetAccountTransactionsPagedAsync(accountId, pageNumber, pageSize);
             return Ok(result);
+        }
+
+        [HttpPost("deposit")]
+        public async Task<ActionResult<Transaction>> Deposit(TransactionCreateDTO dto) 
+        {
+            try
+            {
+                var transaction = await _transactionService.WithdrawAsync(dto);
+                return CreatedAtAction(nameof(GetTransactionById), new { transactionId = transaction.TransactionId }, transaction);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("withdraw")]
+        public async Task<ActionResult<Transaction>> Withdraw(TransactionCreateDTO dto) 
+        {
+
+            try
+            {
+                var transaction = await _transactionService.WithdrawAsync(dto);
+                return CreatedAtAction(nameof(GetTransactionById), new { transactionId = transaction.TransactionId }, transaction);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
 }

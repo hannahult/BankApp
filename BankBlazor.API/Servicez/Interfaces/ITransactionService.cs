@@ -14,5 +14,7 @@ namespace BankBlazor.API.Servicez.Interfaces
         Task<PagedResult<TransactionReadDTO>> GetTransactionsPagedAsync(int pageNumber, int pageSize);
         Task<PagedResult<TransactionReadDTO>> GetCustomerTransactionsPagedAsync(int customerId, int pageNumber, int pageSize);
         Task<PagedResult<TransactionReadDTO>> GetAccountTransactionsPagedAsync(int accountId, int pageNumber, int pageSize);
+        Task<Transaction> DepositAsync(TransactionCreateDTO transactionDto);
+        Task<Transaction> WithdrawAsync(TransactionCreateDTO transactionDto);
     }
 }
