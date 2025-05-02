@@ -80,5 +80,11 @@ namespace BankBlazor.API.Controllerz
             var result = await _transactionService.GetTransactionsPagedAsync(pageNumber, pageSize);
             return Ok(result);
         }
+        [HttpGet("customer/{customerId}/paged")]
+        public async Task<ActionResult<PagedResult<TransactionReadDTO>>> GetCustomerTransactionsPaged(int customerId, int pageNumber = 1, int pageSize = 20)
+        {
+            var result = await _transactionService.GetCustomerTransactionsPagedAsync(customerId, pageNumber, pageSize);
+            return Ok(result);
+        }
     }
 }

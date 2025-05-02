@@ -208,5 +208,39 @@ namespace BankBlazor.API.Servicez
                 PageSize = pageSize
             };
         }
+        public async Task<PagedResult<TransactionReadDTO>> GetCustomerTransactionsPagedAsync(int customerId, int pageNumber, int pageSize)
+        {
+            var query = _dbContext.Transactions
+                .Where(t => t.AccountNavigation.Dispositions.Any(d => d.CustomerId == customerId))
+                .OrderByDescending(t => t.Date);
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(t => new TransactionReadDTO
+                {
+                    TransactionId = t.TransactionId,
+                    AccountId = t.AccountId,
+                    Date = t.Date.ToDateTime(TimeOnly.MinValue),
+                    Type = t.Type,
+                    Operation = t.Operation,
+                    Amount = t.Amount,
+                    Balance = t.Balance,
+                    Symbol = t.Symbol,
+                    Bank = t.Bank,
+                    Account = t.Account
+                })
+                .ToListAsync();
+
+            return new PagedResult<TransactionReadDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
     }
 }
