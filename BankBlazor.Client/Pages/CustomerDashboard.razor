@@ -57,6 +57,11 @@
                             <th>Balance</th>
                         </tr>
                     </thead>
+                    <div class="text-end mt-4">
+                        <NavLink class="btn btn-purple me-2" href="/make-transfer">Make Transfer</NavLink>
+                        <NavLink class="btn btn-darkblue me-2" href="/make-deposit">Make Deposit</NavLink>
+                        <NavLink class="btn btn-lightblue" href="/make-withdrawal">Make Withdrawal</NavLink>
+                    </div>
                     <tbody>
                         @foreach (var transaction in Transactions)
                         {
@@ -75,10 +80,6 @@
                     </div>
                 </table>
             }
-        </div>
-        
-        <div class="text-center mt-3">
-            <NavLink class="btn btn-primary" href="/make-transfer">Make a New Transfer</NavLink>
         </div>
     </div>
 </div>
