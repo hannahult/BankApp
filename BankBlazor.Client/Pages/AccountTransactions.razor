@@ -1,20 +1,21 @@
 ﻿@page "/accounts/{accountId:int}/transactions"
-@inject HttpClient HttpClient
+@inject HttpClient http
 @using BankBlazor.Client.ViewModels
+@using Newtonsoft.Json
 
 <h2 class="text-center my-4">Transactions for Account @accountId</h2>
 
 @if (isLoading)
 {
-    <p>Loading transactions...</p>
+    <div class="text-center"><div class="spinner-border"></div><p>Loading transactions...</p></div>
 }
-else if (Transactions == null || !Transactions.Any())
+else if (!Transactions.Any())
 {
-    <p>No transactions found for this account.</p>
+    <p>No transactions found.</p>
 }
 else
 {
-    <table class="table table-bordered table-hover">
+    <table class="table table-hover">
         <thead class="table-dark">
             <tr>
                 <th>Date</th>
@@ -37,29 +38,66 @@ else
             }
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <button class="btn btn-outline-primary" @onclick="PreviousPage" disabled="@(currentPage == 1)">Previous</button>
+        <span>Page @currentPage of @totalPages</span>
+        <button class="btn btn-outline-primary" @onclick="NextPage" disabled="@(currentPage == totalPages)">Next</button>
+    </div>
 }
 
 @code {
-    [Parameter]
-    public int accountId { get; set; }
+    [Parameter] public int accountId { get; set; }
 
     private List<TransactionReadViewModel> Transactions = new();
+    private int currentPage = 1;
+    private int pageSize = 20;
+    private int totalItems;
+    private int totalPages => (int)Math.Ceiling((double)totalItems / pageSize);
     private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        await LoadTransactions();
+    }
+
+    private async Task LoadTransactions()
+    {
+        isLoading = true;
+
+        var response = await http.GetAsync(
+            $"https://localhost:7127/api/transaction/account/{accountId}/paged?pageNumber={currentPage}&pageSize={pageSize}");
+
+        if (response.IsSuccessStatusCode)
         {
-            Transactions = await HttpClient.GetFromJsonAsync<List<TransactionReadViewModel>>(
-                $"https://localhost:7127/api/transaction/account/{accountId}");
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<PagedResult<TransactionReadViewModel>>(json);
+
+            if (result != null)
+            {
+                Transactions = result.Items;
+                totalItems = result.TotalCount;
+            }
         }
-        catch (Exception ex)
+
+        isLoading = false;
+    }
+
+    private async Task NextPage()
+    {
+        if (currentPage < totalPages)
         {
-            Console.WriteLine("Error loading transactions: " + ex.Message);
+            currentPage++;
+            await LoadTransactions();
         }
-        finally
+    }
+
+    private async Task PreviousPage()
+    {
+        if (currentPage > 1)
         {
-            isLoading = false;
+            currentPage--;
+            await LoadTransactions();
         }
     }
 }
