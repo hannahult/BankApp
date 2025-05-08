@@ -17,10 +17,30 @@ a, .btn-link {
 }
 
 .btn-primary {
-    color: #fff;
+    color: rebeccapurple;
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
+
+.btn-outline-primary {
+    color: #7B61FF;
+    border-color: #7B61FF;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #7B61FF;
+        color: white;
+    }
+
+.btn-outline-secondary {
+    color: #c2a6ff;
+    border-color: #c2a6ff;
+}
+
+    .btn-outline-secondary:hover {
+        background-color: #c2a6ff;
+        color: white;
+    }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
@@ -252,17 +272,6 @@ label, input, button {
     padding: 10px;
 }
 
-button, .btn-primary {
-    background-color: #4B0082;
-    color: white;
-    border: none;
-}
-
-    button:hover, .btn-primary:hover {
-        background-color: #37115c;
-    }
-}
-
 .holiday-announcement {
     padding: 1rem;
     background-color: #f4f4f4;
@@ -325,6 +334,19 @@ button, .btn-primary {
     .btn-lightblue:hover {
         background-color: #6ec5f4;
     }
+.btn-lightpurple {
+    background-color: white;
+    color: #c2a6ff;
+    border: 1px solid #b58aff;
+    transition: all 0.2s ease-in-out;
+}
+
+    .btn-lightpurple:hover {
+        background-color: #f2e8ff; 
+        color: #7b61ff;
+        border-color: #7b61ff;
+    }   }
+
 .home-wrapper {
     position: relative;5
 }
